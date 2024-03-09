@@ -12,12 +12,16 @@ class ForecastService {
     public $idVaksin = null;
     public $alpha = null;
     public $periode = null;
+    public $bulan = null;
+    public $tahun = null;
 
-    public function __construct($idVaksin, $periode, $alpha)
+    public function __construct($idVaksin, $periode, $alpha, $bulan, $tahun)
     {
         $this->idVaksin = $idVaksin;
         $this->periode = (int) $periode;
         $this->alpha = $alpha;
+        $this->bulan = $bulan;
+        $this->tahun = (int) $tahun;
     }
 
     public function generate()
@@ -82,16 +86,14 @@ class ForecastService {
 
     public function getActualData()
     {
-        $lastTransaksi = TransaksiVaksin::where('id_vaksin', $this->idVaksin)->where('jenis_transaksi', 'jual')->where('qty', '>', 0)->orderBy('tanggal', 'DESC')->first();
+        $now = $this->tahun.'-'.$this->bulan.'-01';
 
-        if(!$lastTransaksi) {
-            return [];
-        }
+        $tanggal = date("Y-m-d", strtotime( $now." - 1 months"));
 
         $bulanTahun = [];
 
         for ($i = 0; $i < (int) $this->periode; $i++) {
-            $getPeriode = date("Y-m", strtotime( $lastTransaksi->tanggal." - $i months"));
+            $getPeriode = date("Y-m", strtotime( $tanggal." - $i months"));
             
             list($tahun, $bulan) = explode('-', $getPeriode);
             $bulanName = Bulan::where('kode', $bulan)->first();
@@ -162,13 +164,9 @@ class ForecastService {
 
     public function getNextData()
     {
-        $lastTransaksi = TransaksiVaksin::where('id_vaksin', $this->idVaksin)->where('jenis_transaksi', 'jual')->where('qty', '>', 0)->orderBy('tanggal', 'DESC')->first();
+        $now = $this->tahun.'-'.$this->bulan.'-01';
 
-        if(!$lastTransaksi) {
-            return [];
-        }
-
-        $getPeriode = date("Y-m", strtotime( $lastTransaksi->tanggal." + 1 months"));
+        $getPeriode = date("Y-m", strtotime( $now ));
             
         list($tahun, $bulan) = explode('-', $getPeriode);
         $bulanName = Bulan::where('kode', $bulan)->first();
@@ -189,7 +187,7 @@ class ForecastService {
             return (float) $act;
         }
 
-        $hasil = (float) $frc + ( (float) $alpha * ( (int) $act - (float) $frc) );
+        $hasil = $act > 0 ? (float) $frc + ( (float) $alpha * ( (int) $act - (float) $frc) ) : 0;
 
         return (float) $hasil;
     }
@@ -200,7 +198,7 @@ class ForecastService {
             return (float) abs((float) $act - (float) $fcr);
         }
 
-        $hasil = abs((float) $act - (float) $fcr) / ((int) $this->periode - 1);
+        $hasil = $act > 0 ? abs((float) $act - (float) $fcr) / ((int) $this->periode - 1) : 0;
 
         return (float) $hasil;
     }
@@ -211,7 +209,7 @@ class ForecastService {
             return (float) pow( ((float) $act - (float) $fcr), 2 );
         }
 
-        $hasil = pow( ((float) $act - (float) $fcr), 2 ) / ((int) $this->periode - 1);
+        $hasil = $act > 0 ? pow( ((float) $act - (float) $fcr), 2 ) / ((int) $this->periode - 1) : 0;
 
         return (float) $hasil;
     }
@@ -219,7 +217,7 @@ class ForecastService {
     public function rumusMape($act, $fcr)
     {
 
-        $hasil = abs((float) $act - (float) $fcr) / (float) $act;
+        $hasil = $act > 0 ? abs((float) $act - (float) $fcr) / (float) $act : 0;
 
         return (float) $hasil;
     }

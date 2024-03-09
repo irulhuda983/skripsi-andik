@@ -45,9 +45,11 @@ class PeramalanController extends Controller
             'idVaksin' => 'required',
             'periode' => 'required',
             'alpha' => 'required',
+            'bulan' => 'required',
+            'tahun' => 'required',
         ]);
 
-        $peramalanService = new ForecastService($request->idVaksin, $request->periode, $request->alpha);
+        $peramalanService = new ForecastService($request->idVaksin, $request->periode, $request->alpha, $request->bulan, $request->tahun);
 
         $forecast = $peramalanService->generate();
 
@@ -70,16 +72,19 @@ class PeramalanController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
+
         $request->validate([
             'idVaksin' => 'required',
             'periode' => 'required',
             'alpha' => 'required',
+            'bulan' => 'required',
+            'tahun' => 'required',
         ]);
 
         try{
             DB::beginTransaction();
 
-            $peramalanService = new ForecastService((int) $request->idVaksin, (int) $request->periode, $request->alpha);
+            $peramalanService = new ForecastService($request->idVaksin, $request->periode, $request->alpha, $request->bulan, $request->tahun);
 
             $forecast = $peramalanService->generate();
 

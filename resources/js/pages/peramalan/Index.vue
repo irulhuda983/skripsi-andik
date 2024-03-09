@@ -58,6 +58,7 @@ const modalDelete = ref();
 const isLoading = ref(false);
 const datalist = ref([]);
 const listtahun = ref([]);
+const listbulan = ref([]);
 const listvaksin = ref([]);
 const listthead = ref([
     "no.",
@@ -94,6 +95,8 @@ const payload = reactive({
     idVaksin: null,
     periode: null,
     alpha: null,
+    bulan: null,
+    tahun: null,
 });
 
 const errors = reactive({
@@ -102,6 +105,8 @@ const errors = reactive({
     idVaksin: null,
     periode: null,
     alpha: null,
+    bulan: null,
+    tahun: null,
 });
 
 const fetchVaksin = async () => {
@@ -112,6 +117,50 @@ const fetchVaksin = async () => {
         });
 
         listvaksin.value = data.data;
+    } catch (e) {
+        if (e.response.status == 401) {
+            localStorage.removeItem("TOKEN");
+            location.reload();
+        } else {
+            notify({
+                text: "Faliled to add, Server is Maintenent",
+                type: "error",
+                duration: 2000,
+            });
+        }
+    }
+};
+
+const fetchTahun = async () => {
+    try {
+        const { data } = await axiosInstance({
+            url: `/opt/tahun`,
+            method: "GET",
+        });
+
+        listtahun.value = data.data;
+    } catch (e) {
+        if (e.response.status == 401) {
+            localStorage.removeItem("TOKEN");
+            location.reload();
+        } else {
+            notify({
+                text: "Faliled to add, Server is Maintenent",
+                type: "error",
+                duration: 2000,
+            });
+        }
+    }
+};
+
+const fetchBulan = async () => {
+    try {
+        const { data } = await axiosInstance({
+            url: `/opt/bulan`,
+            method: "GET",
+        });
+
+        listbulan.value = data.data;
     } catch (e) {
         if (e.response.status == 401) {
             localStorage.removeItem("TOKEN");
@@ -236,6 +285,8 @@ const closeModalDelete = () => {
 };
 
 onMounted(() => {
+    fetchTahun();
+    fetchBulan();
     fetchVaksin();
     fetchPeramalan();
 });
@@ -451,9 +502,63 @@ onMounted(() => {
                             </div>
                         </div>
 
+                        <div class="w-full grid grid-cols-2 gap-2">
+                            <div class="w-full">
+                                <Label class="block mb-2">Tahun</Label>
+                                <div class="w-full">
+                                    <Select
+                                        v-model="payload.tahun"
+                                        class="border-border"
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue class="mr-1" />
+                                        </SelectTrigger>
+                                        <SelectContent class="z-[99999]">
+                                            <SelectGroup>
+                                                <SelectItem
+                                                    v-for="item in listtahun"
+                                                    :value="String(item.id)"
+                                                >
+                                                    {{ item.text }}
+                                                </SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <div class="w-full">
+                                <Label class="block mb-2">Bulan</Label>
+                                <div class="w-full">
+                                    <Select
+                                        v-model="payload.bulan"
+                                        class="border-border"
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue
+                                                class="capitalize mr-1"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent class="z-[99999]">
+                                            <SelectGroup>
+                                                <SelectItem
+                                                    v-for="item in listbulan"
+                                                    :value="String(item.kode)"
+                                                    class="capitalize"
+                                                >
+                                                    {{ item.text }}
+                                                </SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="w-full">
-                            <Label class="block mb-px text-sm w-24 flex-none"
-                                >Jumlah Bulan</Label
+                            <Label
+                                class="block mb-px text-xs lg:text-sm flex-none"
+                                >Jumlah Data Aktual</Label
                             >
                             <div class="w-full">
                                 <Input

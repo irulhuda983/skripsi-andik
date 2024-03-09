@@ -73,6 +73,8 @@ const savePeramalan = async () => {
             idVaksin: singgleForecast.value.idVaksin,
             alpha: singgleForecast.value.alpha,
             periode: singgleForecast.value.periode,
+            bulan: singgleForecast.value.bulan,
+            tahun: singgleForecast.value.tahun,
         };
         const { data } = await axiosInstance({
             url: "/peramalan",
