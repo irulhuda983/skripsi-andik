@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 import { useDark, useToggle, usePreferredDark } from "@vueuse/core";
 import LogoutIcon from "@/components/icons/LogoutIcon.vue";
 import DefaultUserImg from "@/assets/img/default_user.jpg";
+import SuntikIcon from "@/components/icons/SuntikIcon.vue";
 
 const store = useAuthStore();
 const route = useRoute();
@@ -25,7 +26,35 @@ const logout = () => {
     <div
         class="w-full h-16 bg-background/50 border-b border-border backdrop-blur-md flex items-center justify-between box-border px-4 absolute top-0 z-10"
     >
-        <div class="w-full box-border flex justify-end">
+        <div
+            class="w-full box-border flex items-center justify-between lg:justify-end"
+        >
+            <!-- logo -->
+            <div
+                class="w-full box-border relative flex lg:hidden items-center justify-between"
+            >
+                <div
+                    class="w-full box-border flex items-center gap-3 border-b border-border py-3"
+                >
+                    <div
+                        class="flex-none bg-secondary box-border rounded w-12 h-10 flex items-center justify-center text-cyan-600 dark:text-white"
+                    >
+                        <SuntikIcon class="w-6 h-6 fill-current" />
+                    </div>
+                    <!-- <div
+                    class="font-bold text-sm w-full box-border pr-3 tracking-wide"
+                >
+                    Sistem Pengadaan<br />Stock Vaksin
+                </div> -->
+                    <div
+                        class="font-bold w-full box-border pr-3 tracking-wide text-xs"
+                    >
+                        Vaccine Stock
+                    </div>
+                </div>
+            </div>
+
+            <!-- left -->
             <div class="flex items-center gap-5">
                 <div class="flex justify-center items-center group">
                     <div class="flex items-center truncate">

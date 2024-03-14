@@ -19,7 +19,7 @@
             </TransitionChild>
             <div class="fixed z-50 inset-0 box-border overflow-hidden">
                 <div
-                    class="flex box-border items-end sm:items-center justify-center items-center h-screen p-4 text-center sm:p-0"
+                    class="flex box-border items-end sm:items-center justify-center items-center h-screen lg:p-4 text-center sm:p-0"
                 >
                     <TransitionChild
                         as="template"

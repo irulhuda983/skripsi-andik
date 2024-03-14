@@ -11,6 +11,9 @@ use App\Models\TransaksiVaksin;
 use App\Services\ForecastService;
 use App\Http\Resources\PeramalanResource;
 
+use App\Exports\PeramalanExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -67,6 +70,20 @@ class PeramalanController extends Controller
         ];
 
         return response()->json(compact('data'), 200);
+    }
+
+    public function export(Peramalan $peramalan) 
+    {
+        $hasil = json_decode($peramalan->hasil, true);
+
+        $data = [
+            'detail' => $hasil['detailForecast'],
+            'next' => $hasil['nextForecast'],
+            'average' => $hasil['average'],
+            'alpha' => $peramalan->nilai_alpha,
+        ];
+        // return view('exports.peramalan', $data);
+        return Excel::download(new PeramalanExport($data), 'peramalan.xlsx');
     }
 
     public function store(Request $request)

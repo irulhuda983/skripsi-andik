@@ -32,7 +32,7 @@ watch(
 <template>
     <form
         @submit.prevent="emit('submit', search)"
-        class="w-[360px] relative text-base flex items-center justify-center"
+        class="w-full relative text-base flex items-center justify-center"
     >
         <input
             type="text"

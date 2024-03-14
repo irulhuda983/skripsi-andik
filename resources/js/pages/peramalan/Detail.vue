@@ -1,9 +1,13 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, reactive, onMounted, defineAsyncComponent } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useForecastStore } from "@/stores/forecast";
 import { storeToRefs } from "pinia";
 import { useNotification } from "@kyvg/vue3-notification";
+
+const AreaChart = defineAsyncComponent(() =>
+    import("@/components/chart/AreaChart.vue")
+);
 
 import { Button } from "@/components/UI/button";
 import {
@@ -60,6 +64,17 @@ const listthead = ref([
 const tampilan = ref("detail");
 const singgleForecast = ref(null);
 
+const dataset = reactive([
+    {
+        name: "aktual",
+        data: [],
+    },
+    {
+        name: "forecast",
+        data: [],
+    },
+]);
+
 const fetchData = async () => {
     try {
         const { data } = await axiosInstance({
@@ -68,6 +83,22 @@ const fetchData = async () => {
         });
 
         singgleForecast.value = data.data;
+
+        const detailForecast = data.data.hasil.detailForecast;
+
+        detailForecast.forEach((el) => {
+            let title = `${limitCharacter(el.namaBulan)} ${el.tahun}`;
+
+            dataset[0].data.push({
+                x: title.toUpperCase(),
+                y: el.actual,
+            });
+
+            dataset[1].data.push({
+                x: title.toUpperCase(),
+                y: el.forecast,
+            });
+        });
     } catch (e) {
         if (e.response.status == 401) {
             localStorage.removeItem("TOKEN");
@@ -82,6 +113,24 @@ const fetchData = async () => {
     }
 };
 
+const limitCharacter = (doc) => {
+    const nama = doc;
+    const panjang = doc.length;
+
+    if (panjang < 3) {
+        return nama;
+    }
+    const data = doc.split("");
+    let newName = [];
+    data.forEach((element, index) => {
+        if (index < 3) {
+            newName.push(element);
+        }
+    });
+
+    return newName.join("");
+};
+
 onMounted(() => {
     fetchData();
 });
@@ -93,9 +142,9 @@ onMounted(() => {
             class="w-full relative overflow-x-auto shadow-md sm:rounded-lg border border-border bg-card text-card-foreground shadow"
         >
             <div
-                class="box-border px-6 py-3 border-b border-border flex justify-between items-center"
+                class="box-border px-6 py-3 border-b border-border flex flex-col lg:flex-row lg:justify-between lg:items-center"
             >
-                <div>
+                <div class="mr-10 lg:mr-0 mb-5 lg:mb-0">
                     <Select v-model="tampilan" class="border-border">
                         <SelectTrigger>
                             <div class="flex items-center justify-center gap-2">
@@ -107,27 +156,27 @@ onMounted(() => {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem value="grafik"> Grafik </SelectItem>
                                 <SelectItem value="detail"> Detail </SelectItem>
+                                <SelectItem value="grafik"> Grafik </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
                 </div>
                 <div
-                    class="rounded border border-border px-3 py-2 text-xs flex item-center justify-center gap-2"
+                    class="rounded border border-border px-1.5 lg:px-3 py-2 text-xs flex flex-col lg:flex-row item-center justify-center gap-2 text-xs"
                 >
                     <div class="flex items-center justify-center gap-2">
                         <div class="text-muted-foreground">Vaksin :</div>
                         <div>{{ singgleForecast?.vaksin }}</div>
                     </div>
 
-                    <div class="w-px h-4 bg-border"></div>
+                    <div class="w-full lg:w-px h-px lg:h-4 bg-border"></div>
                     <div class="flex items-center justify-center gap-2">
                         <div class="text-muted-foreground">Alpha :</div>
                         <div>{{ singgleForecast?.alpha }}</div>
                     </div>
 
-                    <div class="w-px h-4 bg-border"></div>
+                    <div class="w-full lg:w-px h-px lg:h-4 bg-border"></div>
                     <div class="flex items-center justify-center gap-2">
                         <div class="text-muted-foreground">Bulan :</div>
                         <div>
@@ -137,7 +186,9 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center justify-center gap-2">
+                <div
+                    class="absolute lg:relative right-2 top-2 lg:right-0 lg:top-0 flex items-center justify-center"
+                >
                     <div class="flex items-center">
                         <Button
                             variant="outline"
@@ -150,7 +201,10 @@ onMounted(() => {
                 </div>
             </div>
 
-            <div class="relative overflow-x-auto w-full text-xs">
+            <div
+                v-if="tampilan == 'detail'"
+                class="relative overflow-x-auto w-full text-xs"
+            >
                 <Table v-if="singgleForecast?.hasil.detailForecast.length > 0">
                     <TableHeader class="bg-muted/50">
                         <TableRow>
@@ -250,6 +304,26 @@ onMounted(() => {
                         </TableRow>
                     </TableBody>
                 </Table>
+            </div>
+
+            <div v-if="tampilan == 'grafik'" class="">
+                <h1 class="mb-2 box-border p-3">
+                    Grafik Perbandingan Peramalan
+                </h1>
+                <AreaChart class="lg:col-span-4" :data="dataset" />
+
+                <div class="mb-2 box-border p-3 flex gap-3 capitalize">
+                    <span
+                        >Prediksi
+                        {{ singgleForecast?.hasil?.nextForecast?.namaBulan }}
+                        {{ singgleForecast?.hasil?.nextForecast?.tahun }}
+                        Adalah</span
+                    >
+
+                    <span class="font-semibold">{{
+                        singgleForecast?.hasil?.nextForecast?.forecast
+                    }}</span>
+                </div>
             </div>
         </div>
     </div>

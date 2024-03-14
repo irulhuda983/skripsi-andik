@@ -42,6 +42,7 @@ import {
     FilePenLine,
     Trash2,
     ChevronsUpDown,
+    FileDown,
 } from "lucide-vue-next";
 import Modal from "@/components/UI/Modal.vue";
 import LoadingTable from "@/components/LoadingTable.vue";
@@ -238,6 +239,34 @@ const savePeramalan = async () => {
     }
 };
 
+const downloadPeramalan = async (id) => {
+    try {
+        const resp = await axiosInstance({
+            url: `/peramalan/${id}/export`,
+            method: "POST",
+            responseType: "blob",
+        });
+
+        const url = window.URL.createObjectURL(new Blob([resp.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "detail-peramalan.xlsx");
+        document.body.appendChild(link);
+        link.click();
+    } catch (e) {
+        if (e?.response?.status == 401) {
+            localStorage.removeItem("TOKEN");
+            location.reload();
+        } else {
+            notify({
+                text: "Faliled to add, Server is Maintenent",
+                type: "error",
+                duration: 2000,
+            });
+        }
+    }
+};
+
 const deletePeramalan = async () => {
     try {
         const { data } = await axiosInstance({
@@ -379,6 +408,19 @@ onMounted(() => {
                                 <TableCell class="px-6 flex w-full">
                                     <div class="w-full flex justify-end gap-1">
                                         <button
+                                            @click.prevent="
+                                                downloadPeramalan(item.id)
+                                            "
+                                            class="group relative bg-amber-400/20 hover:bg-amber-600 text-amber-500 hover:text-white rounded p-1 flex items-center gap-1"
+                                        >
+                                            <FileDown class="w-4 h-4" />
+                                            <div
+                                                class="bg-background/50 backdrop-blur rounded px-2 py-1 absolute -left-[25px] -top-8 w-[70px] text-[10px] border border-border hidden group-hover:block text-primary"
+                                            >
+                                                Download
+                                            </div>
+                                        </button>
+                                        <button
                                             @click="
                                                 router.push({
                                                     name: 'detailPeramalan',
@@ -389,7 +431,7 @@ onMounted(() => {
                                         >
                                             <SquareGanttChart class="w-4 h-4" />
                                             <div
-                                                class="bg-background/50 backdrop-blur rounded px-2 py-1 absolute -left-[15px] -top-8 w-[60px] text-[10px] border border-border hidden group-hover:block"
+                                                class="bg-background/50 backdrop-blur rounded px-2 py-1 absolute -left-[15px] -top-8 w-[60px] text-[10px] border border-border hidden group-hover:block text-primary"
                                             >
                                                 Detail
                                             </div>
@@ -402,7 +444,7 @@ onMounted(() => {
                                         >
                                             <Trash2 class="w-4 h-4" />
                                             <div
-                                                class="bg-background/50 backdrop-blur rounded px-2 py-1 absolute -left-[25%] -top-8 text-[10px] border border-border hidden group-hover:block"
+                                                class="bg-background/50 backdrop-blur rounded px-2 py-1 absolute -left-[25%] -top-8 text-[10px] border border-border hidden group-hover:block text-primary"
                                             >
                                                 Hapus
                                             </div>

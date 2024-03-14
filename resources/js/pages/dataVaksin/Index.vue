@@ -426,9 +426,9 @@ onMounted(() => {
             class="w-full relative overflow-x-auto shadow-md sm:rounded-lg border border-border bg-card text-card-foreground shadow"
         >
             <div
-                class="box-border px-6 py-6 border-b border-border flex justify-between items-center"
+                class="w-full box-border px-6 py-6 border-b border-border flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2"
             >
-                <div class="flex items-center">
+                <div class="w-full lg:w-auto flex items-center">
                     <Button
                         @click.prevent="openModalTambah()"
                         variant="outline"
@@ -440,8 +440,10 @@ onMounted(() => {
                     </Button>
                 </div>
 
-                <div class="flex items-center justify-center gap-2">
-                    <div>
+                <div
+                    class="flex items-center justify-center gap-2 flex-col lg:flex-row"
+                >
+                    <div class="w-full lg:w-auto">
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 <button
@@ -466,7 +468,11 @@ onMounted(() => {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <Search v-model="params.search" @submit="fetchData()" />
+                    <Search
+                        v-model="params.search"
+                        @submit="fetchData()"
+                        class="w-full lg:w-[360px]"
+                    />
                 </div>
             </div>
 
@@ -621,7 +627,7 @@ onMounted(() => {
     <Modal ref="modalTambah">
         <template v-slot:modal-body>
             <div
-                class="relative w-screen mx-6 lg:mx-0 lg:w-[640px] box-border overflow-x-hidden overflow-y-auto text-foreground bg-background border border-border rounded-lg"
+                class="relative w-screen mx-4 lg:mx-0 lg:w-[640px] box-border overflow-x-hidden overflow-y-auto text-foreground bg-background border border-border rounded-lg"
             >
                 <div
                     class="w-full box-border border-b border-border bg-background/50 backdrop-blur sticky top-0 flex items-center justify-between px-4 py-2"
@@ -688,7 +694,7 @@ onMounted(() => {
     <Modal ref="modalEdit">
         <template v-slot:modal-body>
             <div
-                class="relative w-screen mx-6 lg:mx-0 lg:w-[640px] box-border overflow-x-hidden overflow-y-auto text-foreground bg-background border border-border rounded-lg"
+                class="relative w-screen mx-4 lg:mx-0 lg:w-[640px] box-border overflow-x-hidden overflow-y-auto text-foreground bg-background border border-border rounded-lg"
             >
                 <div
                     class="w-full box-border border-b border-border bg-background/50 backdrop-blur sticky top-0 flex items-center justify-between px-4 py-2"
@@ -755,7 +761,7 @@ onMounted(() => {
     <Modal ref="modalDelete">
         <template v-slot:modal-body>
             <div
-                class="relative w-screen mx-6 lg:mx-0 lg:w-[640px] box-border overflow-x-hidden overflow-y-auto text-foreground bg-background border border-border rounded-lg"
+                class="relative w-screen mx-4 lg:mx-0 lg:w-[640px] box-border overflow-x-hidden overflow-y-auto text-foreground bg-background border border-border rounded-lg"
             >
                 <div class="w-full box-border px-8 py-6 pt-10">
                     <div class="w-full mb-6">
@@ -822,7 +828,7 @@ onMounted(() => {
     <Modal ref="modalEditNilai">
         <template v-slot:modal-body>
             <div
-                class="relative w-screen h-full mx-6 lg:mx-0 lg:w-[640px] box-border overflow-x-hidden overflow-y-auto text-foreground bg-background border border-border rounded-lg"
+                class="relative w-screen h-full mx-4 lg:mx-0 lg:w-[640px] box-border overflow-x-hidden overflow-y-auto text-foreground bg-background border border-border rounded-lg"
             >
                 <div
                     class="w-full box-border border-b border-border bg-background/50 backdrop-blur sticky top-0 flex items-center justify-between px-4 py-2"
@@ -865,7 +871,7 @@ onMounted(() => {
                                 v-for="item in payloadTransaksi"
                             >
                                 <label
-                                    class="box-border w-[120px] flex-none h-full block mb-px text-sm flex items-center px-4 bg-accent/50 capitalize font-normal"
+                                    class="box-border w-[80px] lg:w-[120px] flex-none h-full block mb-px text-xs lg:text-sm flex items-center px-2 lg:px-4 bg-accent/50 capitalize font-normal"
                                     >{{ item.namaBulan }}</label
                                 >
                                 <input

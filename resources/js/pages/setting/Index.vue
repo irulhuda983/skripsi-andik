@@ -134,8 +134,12 @@ const updateProfil = async () => {
             <div class="relative overflow-x-auto w-full">
                 <div class="w-full box-border px-3 py-6">
                     <form @submit.prevent="updateProfil()">
-                        <div class="w-full flex gap-2 mb-5">
-                            <div class="w-1/2 flex items-center justify-center">
+                        <div
+                            class="w-full flex flex-col lg:flex-row gap-2 mb-5"
+                        >
+                            <div
+                                class="w-full lg:w-1/2 flex items-center justify-center"
+                            >
                                 <div class="mb-6 w-2/3">
                                     <div
                                         class="flex items-center justify-center w-full"
@@ -207,7 +211,7 @@ const updateProfil = async () => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-1/2 space-y-4">
+                            <div class="w-full lg:w-1/2 space-y-4">
                                 <div class="w-full">
                                     <Label class="block mb-px text-sm flex-none"
                                         >Nama Lengkap</Label

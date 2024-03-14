@@ -17,7 +17,7 @@ const { largeMenu } = storeToRefs(settingStore);
         class="w-screen h-screen box-border overflow-x-hidden overflow-y-auto flex justify-between relative bg-background text-foreground"
     >
         <div
-            class="w-full transition-all lg:h-full fixed lg:relative bottom-0 box-border flex-none"
+            class="w-full transition-all lg:h-full fixed lg:relative bottom-0 box-border flex-none z-[99999] lg:z-50"
             :class="largeMenu ? 'lg:w-60' : 'lg:w-24'"
         >
             <Sidebar />
@@ -28,7 +28,7 @@ const { largeMenu } = storeToRefs(settingStore);
         >
             <Navbar />
             <div
-                class="w-full box-border overflow-x-hidden h-full pt-[80px] pb-[20px] px-4"
+                class="w-full box-border overflow-x-hidden h-full pt-[80px] pb-[100px] lg:pb-[20px] px-4"
             >
                 <RouterView />
             </div>

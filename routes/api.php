@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\VaksinController;
 use App\Http\Controllers\API\PeramalanController;
 use App\Http\Controllers\API\OptionsController;
@@ -46,6 +47,12 @@ Route::prefix('account')
 Route::middleware('auth:sanctum')
 ->group(function() {
 
+    Route::prefix('dashboard')
+    ->controller(DashboardController::class)
+    ->group(function() {
+        Route::get('/chart', 'getChart');
+    });
+
     Route::prefix('vaksin')
     ->controller(VaksinController::class)
     ->group(function() {
@@ -66,6 +73,7 @@ Route::middleware('auth:sanctum')
         Route::get('/{peramalan}/show', 'show');
         Route::post('/get-forecast', 'getForecast');
         Route::post('/', 'store');
+        Route::post('/{peramalan}/export', 'export');
         Route::delete('/{peramalan}/delete', 'destroy');
     });
 

@@ -142,4 +142,58 @@ const { largeMenu } = storeToRefs(settingStore);
             </div>
         </div>
     </div>
+
+    <div
+        class="block lg:hidden border-t border-border relative bg-background/80 backdrop-blur"
+    >
+        <div class="w-full h-full p-3">
+            <div class="w-full box-border flex items-center justify-between">
+                <!-- bg-[#556FF6] -->
+                <router-link
+                    :to="{ name: 'dashboard' }"
+                    class="block w-12 h-12 box-border text flex justify-center items-center rounded-[5px]"
+                    :class="
+                        route.meta.menu == 'dashboard'
+                            ? 'bg-accent text-foreground'
+                            : 'text-muted-foreground hover:text-foreground'
+                    "
+                >
+                    <LayoutDashboard class="w-6 h-6" />
+                </router-link>
+                <router-link
+                    :to="{ name: 'dataVaksin' }"
+                    class="block w-12 h-12 box-border text flex justify-center items-center rounded-[5px]"
+                    :class="
+                        route.meta.menu == 'dataVaksin'
+                            ? 'bg-accent text-foreground'
+                            : 'text-muted-foreground hover:text-foreground'
+                    "
+                >
+                    <Archive class="w-6 h-6" />
+                </router-link>
+                <router-link
+                    :to="{ name: 'peramalan' }"
+                    class="block w-12 h-12 box-border text flex justify-center items-center rounded-[5px]"
+                    :class="
+                        route.meta.menu == 'peramalan'
+                            ? 'bg-accent text-foreground'
+                            : 'text-muted-foreground hover:text-foreground'
+                    "
+                >
+                    <FilePieChart class="w-6 h-6" />
+                </router-link>
+                <router-link
+                    :to="{ name: 'setting' }"
+                    class="block w-12 h-12 box-border text flex justify-center items-center rounded-[5px]"
+                    :class="
+                        route.meta.menu == 'setting'
+                            ? 'bg-accent text-foreground'
+                            : 'text-muted-foreground hover:text-foreground'
+                    "
+                >
+                    <Settings class="w-6 h-6" />
+                </router-link>
+            </div>
+        </div>
+    </div>
 </template>

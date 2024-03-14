@@ -74,9 +74,7 @@ function getOption() {
 }
 </script>
 <template>
-    <div
-        class="w-full h-[350px] pr-3 pl-1 py-3 rounded-xl shadow-md border border-border"
-    >
+    <div class="w-full h-[350px] pr-3 pl-1 py-3 rounded-xl shadow-md">
         <apexchart
             width="100%"
             height="100%"
