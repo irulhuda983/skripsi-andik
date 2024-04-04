@@ -1,8 +1,17 @@
 <table border="1">
     <thead>
         <tr>
-            <th colspan="7">α = {{ $alpha }}</th>
+            <th colspan="7" style="text-align: center;">Hasil Peramalan Vaksin {{ $vaksin }} Dengan alpha {{ $alpha }}</th>
         </tr>
+        <tr>
+            <th colspan="7" style="text-align: center;">Bulan {{ $bulan }} - {{ $tahun }}</th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <!-- <tr>
+            <th colspan="7">α = {{ $alpha }}</th>
+        </tr> -->
     </thead>
     <thead>
         <tr>
@@ -15,7 +24,7 @@
             <th>MAPE</th>
         </tr>
         <tr>
-            <th>(At-Ft) / n</th>
+            <th>At-Ft</th>
             <th>(Xt-Ft)^2/n</th>
             <th>(At-Ft)/At</th>
         </tr>

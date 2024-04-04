@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Peramalan;
 use App\Models\Vaksin;
+use App\Models\Bulan;
 use App\Models\TransaksiVaksin;
 use App\Services\ForecastService;
 use App\Http\Resources\PeramalanResource;
@@ -76,11 +77,15 @@ class PeramalanController extends Controller
     {
         $hasil = json_decode($peramalan->hasil, true);
 
+        $bulan = Bulan::where('kode', $peramalan->bulan)->first();
         $data = [
             'detail' => $hasil['detailForecast'],
             'next' => $hasil['nextForecast'],
             'average' => $hasil['average'],
             'alpha' => $peramalan->nilai_alpha,
+            'vaksin' => Vaksin::find($peramalan->id_vaksin)->nama,
+            'bulan' => $bulan->nama,
+            'tahun' => $peramalan->tahun,
         ];
         // return view('exports.peramalan', $data);
         return Excel::download(new PeramalanExport($data), 'peramalan.xlsx');

@@ -198,7 +198,8 @@ class ForecastService {
             return (float) abs((float) $act - (float) $fcr);
         }
 
-        $hasil = $act > 0 ? abs((float) $act - (float) $fcr) / ((int) $this->periode - 1) : 0;
+        // $hasil = $act > 0 ? abs((float) $act - (float) $fcr) / ((int) $this->periode - 1) : 0;
+        $hasil = $act > 0 ? abs((float) $act - (float) $fcr) : 0;
 
         return (float) $hasil;
     }
